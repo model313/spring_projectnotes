@@ -14,5 +14,6 @@
 	<input type="button" value="post_ajax" id="btn2">
 	<br><br>
 	<input type="button" value="ajax practice" id="btn3">
+	<input type="button" value="ajax homework" id="btn4">
 </body>
 </html>

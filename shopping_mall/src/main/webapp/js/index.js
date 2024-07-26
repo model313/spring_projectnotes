@@ -78,4 +78,21 @@ $(function(){
 			}
 		});
 	});
+	
+	$("#btn4").click(function(){
+		$.ajax({
+			url : "./ajaxok4.do",
+			type : "post",
+			cache : false,
+			dataType : "json",
+			contentType : "application/json",
+			data : JSON.stringify(basket),
+			success : function($result){
+				console.log($result);
+			},
+			error : function(){
+				console.log("error");
+			}
+		});
+	});
 });

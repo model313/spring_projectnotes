@@ -5,7 +5,9 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.mysql.cj.xdevapi.JsonArray;
 
@@ -66,6 +69,60 @@ public class web_controller {
 		
 		this.pw = res.getWriter();
 		this.pw.print("ok");
+		this.pw.close();
+		return null;
+	}
+	
+	//HttpSession : interface를 활용하여 세션을 빠르게 구현하는 방식
+	@PostMapping("/loginok.do")
+	public String loginok (@RequestParam(value="", required=false) String mid, HttpSession session) {
+		if(mid!=null||mid!="") {
+			session.setAttribute("mid", mid);
+			session.setMaxInactiveInterval(1800); //30분
+		}
+		return null;
+	}
+	/*
+	@PostMapping("/loginok.do")
+	public String loginok (String mid, HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		session.setAttribute("mid", mid);
+		session.setMaxInactiveInterval(1800); //30분
+		System.out.println(mid);
+		return null;
+	}
+	*/
+	
+	@GetMapping("/restapi.do")
+	public String restapi(@SessionAttribute(name="mid", required=false) String mid) throws Exception{
+		if(mid==null) {
+			System.out.println("로그인 해야만 장바구니를 확인 하실수있습니다.");
+		}
+		else {
+			System.out.println("결제내역은 다음과 같습니다");
+		}
+		return null;
+	}
+	
+	//숙제
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@PostMapping("/ajaxok4.do")
+	public String ajaxok4(@RequestBody String basket, HttpServletResponse res) throws Exception {
+		System.out.println(basket);
+		JSONArray ja = new JSONArray(basket);
+		System.out.println(ja.get(0));
+		JSONObject innerjo1 = (JSONObject) ja.get(0);
+		JSONObject innerjo2 = (JSONObject) ja.get(1);
+		JSONObject innerjo3 = (JSONObject) ja.get(2);
+		System.out.println(innerjo1.get("seq"));
+		System.out.println(innerjo2.get("product"));
+		System.out.println(innerjo3.get("price"));
+		
+		JSONObject result = new JSONObject();
+		result.put("result", "ok");
+		
+		this.pw = res.getWriter();
+		this.pw.print(result);
 		this.pw.close();
 		return null;
 	}
